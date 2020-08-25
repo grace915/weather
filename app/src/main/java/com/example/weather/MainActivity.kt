@@ -46,7 +46,7 @@ class MainActivity() : AppCompatActivity() {
 
         //API 주소 선언
         val url =
-            "https://api.openweathermap.org/data/2.5/weather?q=Busan&appid=4b1404f09c6868209083b9d148a18b31" + "&language=ko-KR" + "&region=KR"
+            "https://api.openweathermap.org/data/2.5/weather?q=Pohang&appid=4b1404f09c6868209083b9d148a18b31" + "&language=ko-KR" + "&region=KR"
 
 
         //API를 호출함
@@ -88,19 +88,59 @@ Weater ID 대분류
 800 : 맑음 ->sunny02
 8xx : 구름 ->cloudy01
 */
+                    val sunnyRandom = (1..4).random()
+                    val snowyRandom = (1..3).random()
+                    val rainyRandom = (2..5).random()
+                    val stromRandom = (1..5).random()
                     when (weatherId) {
                         in 200..232 -> main_iv_weather.setImageResource(R.drawable.stomy01)
-                        in 300..321 -> main_iv_weather.setImageResource(R.drawable.rainy04)
-                        in 500..531 -> main_iv_weather.setImageResource(R.drawable.rainy01)
-                        in 600..622 -> main_iv_weather.setImageResource(R.drawable.snowy02)
+                        in 300..321 ->
+                            when (rainyRandom) {
+
+                                1 -> main_iv_weather.setImageResource(R.drawable.rainy01    )
+                                2 -> main_iv_weather.setImageResource(R.drawable.rainy02)
+                                3 -> main_iv_weather.setImageResource(R.drawable.rainy03)
+                                4 -> main_iv_weather.setImageResource(R.drawable.rainy04)
+                                5 -> main_iv_weather.setImageResource(R.drawable.rainy05)
+                                else -> main_iv_weather.setImageResource(R.drawable.cloudy01)
+                            }
+                        in 500..531 ->
+                            when (rainyRandom) {
+                                2 -> main_iv_weather.setImageResource(R.drawable.rainy02)
+                                3 -> main_iv_weather.setImageResource(R.drawable.rainy03)
+                                4 -> main_iv_weather.setImageResource(R.drawable.rainy04)
+                                5 -> main_iv_weather.setImageResource(R.drawable.rainy05)
+                                else -> main_iv_weather.setImageResource(R.drawable.cloudy01)
+                            }
+                        in 600..622 ->
+                            when (snowyRandom) {
+                                1 -> main_iv_weather.setImageResource(R.drawable.snowy01)
+                                2 -> main_iv_weather.setImageResource(R.drawable.snowy02)
+                                3 -> main_iv_weather.setImageResource(R.drawable.snowy03)
+                                else -> main_iv_weather.setImageResource(R.drawable.sunny01)
+                            }
                         in 701..781 -> main_iv_weather.setImageResource(R.drawable.cloudy02)
-                        800 -> main_iv_weather.setImageResource(R.drawable.sunny02)
-                        in 801..805 -> main_iv_weather.setImageResource(R.drawable.cloudy01)
+                        800 ->
+                            when (sunnyRandom) {
+                                1 -> main_iv_weather.setImageResource(R.drawable.sunny01)
+                                2 -> main_iv_weather.setImageResource(R.drawable.sunny02)
+                                3 -> main_iv_weather.setImageResource(R.drawable.sunny03)
+                                4 -> main_iv_weather.setImageResource(R.drawable.sunny04)
+                                else -> main_iv_weather.setImageResource(R.drawable.snowy01)
+                            }
+
+                        in 801..805 ->
+                            when (snowyRandom) {
+                                1 -> main_iv_weather.setImageResource(R.drawable.cloudy01)
+                                2 -> main_iv_weather.setImageResource(R.drawable.cloudy02)
+                                3 -> main_iv_weather.setImageResource(R.drawable.cloudy03)
+                                else -> main_iv_weather.setImageResource(R.drawable.rainy01)
+                            }
                     }
 
                 } catch (e: JSONException) {
                     Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
-                   // Toast.makeText(this, "실패", Toast.LENGTH_LONG).show()
+                    // Toast.makeText(this, "실패", Toast.LENGTH_LONG).show()
                 }
             }, Response.ErrorListener { //데이터가 정상적으로 호출되지 않았을 때 처리하는 부분
                     error ->
