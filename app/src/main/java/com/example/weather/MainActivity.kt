@@ -1,17 +1,29 @@
 package com.example.weather
 
+import android.content.Context
+import android.content.Intent
+
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
 import com.android.volley.Request.Method.GET
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.load.engine.executor.GlideExecutor.UncaughtThrowableStrategy.LOG
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONException
 
@@ -30,10 +42,17 @@ Weater ID 대분류
 
 class MainActivity() : AppCompatActivity() {
 
+    var city : String = "Pohang"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        val ab = supportActionBar
+        supportActionBar?.title = "액션바"
 
 
         //날씨 파싱 4
@@ -46,7 +65,7 @@ class MainActivity() : AppCompatActivity() {
 
         //API 주소 선언
         val url =
-            "https://api.openweathermap.org/data/2.5/weather?q=Pohang&appid=4b1404f09c6868209083b9d148a18b31" + "&language=ko-KR" + "&region=KR"
+            "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=4b1404f09c6868209083b9d148a18b31"
 
 
         //API를 호출함
@@ -72,10 +91,10 @@ class MainActivity() : AppCompatActivity() {
 
                     main_tv_city.text = name
                     main_tv_description.text = description
-                    main_tv_temp.text = (temp - 273.15).toInt().toString()
-                    main_tv_humidity.text = humidity.toString()
-                    main_tv_speed.text = speed.toString()
-                    main_tv_all.text = all.toString()
+                    main_tv_temp.text = (temp - 273.15).toInt().toString() + "℃"
+                    main_tv_humidity.text = humidity.toString() + "%"
+                    main_tv_speed.text = speed.toString() + "km/h"
+                    main_tv_all.text = all.toString() + "%"
 
 
 /*
@@ -91,13 +110,13 @@ Weater ID 대분류
                     val sunnyRandom = (1..4).random()
                     val snowyRandom = (1..3).random()
                     val rainyRandom = (2..5).random()
-                    val stromRandom = (1..5).random()
+                    val stormRandom = (1..5).random()
                     when (weatherId) {
                         in 200..232 -> main_iv_weather.setImageResource(R.drawable.stomy01)
                         in 300..321 ->
-                            when (rainyRandom) {
+                            when (stormRandom) {
 
-                                1 -> main_iv_weather.setImageResource(R.drawable.rainy01    )
+                                1 -> main_iv_weather.setImageResource(R.drawable.rainy01)
                                 2 -> main_iv_weather.setImageResource(R.drawable.rainy02)
                                 3 -> main_iv_weather.setImageResource(R.drawable.rainy03)
                                 4 -> main_iv_weather.setImageResource(R.drawable.rainy04)
@@ -136,7 +155,22 @@ Weater ID 대분류
                                 3 -> main_iv_weather.setImageResource(R.drawable.cloudy03)
                                 else -> main_iv_weather.setImageResource(R.drawable.rainy01)
                             }
+
+
+
+
                     }
+
+                    main_ibtn_refresh.setOnClickListener {
+                        onResume()
+                        Toast.makeText(this ,"restart", Toast.LENGTH_SHORT).show()
+                    }
+                    main_ibtn_search.setOnClickListener {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://n.weather.naver.com"))
+                        startActivity(intent)
+
+                    }
+
 
                 } catch (e: JSONException) {
                     Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
@@ -151,7 +185,11 @@ Weater ID 대분류
         requestQueue.add(request)
 
 
+
+
     }
 
 
 }
+
+
